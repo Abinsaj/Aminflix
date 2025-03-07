@@ -32,4 +32,15 @@ export const getFavouriteMovie = async()=>{
         }
     }
 }
+
+export const removeFromFavourite = async(movie: string)=>{
+    try {
+        const response = await axiosInstance.post(`/remove?id=${movie}`)
+        return response.data
+    } catch (error: any) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data.message || 'Something went wrong');
+        }
+    }
+}
   

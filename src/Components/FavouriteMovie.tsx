@@ -1,6 +1,6 @@
 import { Play, Heart, Trash2, User, ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getFavouriteMovie } from '../Service/axiosCall';
+import { getFavouriteMovie, removeFromFavourite } from '../Service/axiosCall';
 import { IMovie } from './MovieHome';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -22,6 +22,19 @@ const FavoritesMovie = () => {
     try {
         const data = await getFavouriteMovie()
         setFavorite(data)
+    } catch (error: any) {
+        toast.error(error.message)
+    }finally{
+        setIsLoading(false)
+    }
+  }
+
+  const removeMovie = async(movie:string)=>{
+    setIsLoading(true)
+    try {
+        let data = await removeFromFavourite(movie)
+        setFavorite(data.favouriteMovie)
+        toast.success(data.message)
     } catch (error: any) {
         toast.error(error.message)
     }finally{
@@ -83,6 +96,7 @@ const FavoritesMovie = () => {
                               <Play size={20} fill="currentColor" />
                             </button>
                             <button 
+                            onClick={()=>removeMovie(movie.imdbID)}
                               className="bg-slate-800/80 text-red-500 rounded-full p-2 hover:bg-slate-700 transition-colors duration-200"
                             >
                               <Trash2 size={20} />
